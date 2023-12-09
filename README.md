@@ -17,24 +17,17 @@ Biological data imbalance
 Victoria Ruiz Serra victoria.ruizserra@bsc.es 
 Beatriz Urda beatriz.urda@bsc.es
 
-## Expected outcomes
-
-Task 1. 
-Task 2. 
-
 ## Expected audience
 
 This initiative is tailored for a diverse audience, including ELIXIR data resource representatives such as designers, developers, and data miners. It is also aimed at computer scientists proficient in database skills, encompassing development and data management. Furthermore, researchers in computational biology with a strong programming background, individuals from social sciences with a keen interest in biomedicine and technology, and data scientists with substantial analytical and statistical knowledge will find valuable insights. Bioinformaticians well-versed in biological data resources, biostatisticians intrigued by bias and data mining, and researchers and practitioners in academic or industrial fields dedicated to social equity are all encouraged to engage with this initiative.
 
-## Working group 1
+## Working groups (WG)
 
-## Useful links
+|  | Objectives | People | Useful links |
+|---|---|---|---|
+| WG1 | Refine counts data to improve its quality |  |  |
+| WG2 | Comprehensive understanding of sex representation in EU-funded projects, considering various dimensions such as time, project categories, and funding sources |  | [CORDIS](https://cordis.europa.eu/projects) |
+| WG3 | Comprehensive understanding of sex representation in EU-funded projects, considering impact factor and gender of authors dimensions  |  |  |
+| WG4 | Understand the content of CORDIS publications by analyzing MeSH terms.Investigate the relationship between MeSH terms, sex representation, and funding sources, considering both temporal and regulatory dimensions. |  | [MeSH script](https://github.com/cirillodavide/MeSH-retriever/blob/main/mesh_retriever.ipynb) |
+| WG5 | Comparative analysis of funding schemes regarding sex representation in European vs. other countries or continents such as the US. |  | [RePORTER](https://reporter.nih.gov/exporter/) |
 
-### People
-
-
-## Working group 2
-
-## Useful links
-
-### People
