@@ -25,9 +25,9 @@ This initiative is tailored for a diverse audience, including ELIXIR data resour
 
 |  | Objectives | People | Useful links |
 |---|---|---|---|
-| WG1 | Refine counts data to improve its quality |  |  |
-| WG2 | Comprehensive understanding of sex representation in EU-funded projects, considering various dimensions such as time, project categories, and funding sources |  | [CORDIS](https://cordis.europa.eu/projects) |
-| WG3 | Comprehensive understanding of sex representation in EU-funded projects, considering impact factor and gender of authors dimensions  |  |  |
-| WG4 | Understand the content of CORDIS publications by analyzing MeSH terms.Investigate the relationship between MeSH terms, sex representation, and funding sources, considering both temporal and regulatory dimensions. |  | [MeSH script](https://github.com/cirillodavide/MeSH-retriever/blob/main/mesh_retriever.ipynb) |
-| WG5 | Comparative analysis of funding schemes regarding sex representation in European vs. other countries or continents such as the US. |  | [RePORTER](https://reporter.nih.gov/exporter/) |
+| WG1 | Refine counts data to improve its quality | Olivier, Nuria, Claire  |  |
+| WG2 | Comprehensive understanding of sex representation in EU-funded projects, considering various dimensions such as time, project categories, and funding sources | Miriam, Claire (support), Maria F., Sara, Vicky (support), Bea (support)  | [CORDIS](https://cordis.europa.eu/projects) |
+| WG3 | Comprehensive understanding of sex representation in EU-funded projects, considering impact factor and gender of authors dimensions  | Maria M., Hira, Othmane (support) |  |
+| WG4 | Understand the content of CORDIS publications by analyzing MeSH terms.Investigate the relationship between MeSH terms, sex representation, and funding sources, considering both temporal and regulatory dimensions. | Othmane, Iria, Bea, Vicky | [MeSH script](https://github.com/cirillodavide/MeSH-retriever/blob/main/mesh_retriever.ipynb) |
+| WG5 | Comparative analysis of funding schemes regarding sex representation in European vs. other countries or continents such as the US. | Vero, Guillermo, Vicky (support) | [RePORTER](https://reporter.nih.gov/exporter/) |
 
