@@ -137,5 +137,5 @@ dmypy.json
 # zips and csvs
 data/raw/
 data/input/
-
+data/output/nih_projs_publs.csv
 
