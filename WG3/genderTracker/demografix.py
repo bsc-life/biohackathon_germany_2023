@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re
 from typing import List, Dict
 from pyagify.agify import GenderizeClient, NationalizeClient
 
@@ -94,7 +93,7 @@ class GenderPredictor:
                 nation_author[author_fullname]['surname']['country_id'] = country[0]['country_id'] 
                 nation_author[author_fullname]['surname']['country_score'] = country[0]['probability'] 
             
-            except ValueError:
+            except IndexError:
                 country = nation.get_raw(author_name)['country']
                 nation_author[author_fullname]['surname']['country_id'] = country[0]['country_id'] if country else ""
                 nation_author[author_fullname]['surname']['country_score'] = country[0]['probability'] if country else  0.0

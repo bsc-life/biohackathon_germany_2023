@@ -63,7 +63,7 @@ class JsonParser:
         return authors_dict
 
 
-    def is_json_entry_in_csv( csvpath, entry ):
+    def is_pmcid_in_csv( csvpath:str, pmcid:str ) -> bool:
         """
         Check if an entry already exists in a CSV file.
         ------------------------------------
@@ -75,14 +75,14 @@ class JsonParser:
             with open(csvpath, 'r', newline='', encoding='utf-8') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
-                    if row.get('PMCID') == entry.get('PMCID'):
+                    if row.get('PMCID') == pmcid:
                         return True
                 return False
         except FileNotFoundError:
             return False
 
 
-    def json2csv( entry:dict,  outdir:str ) -> None:
+    def json2csv( entry:dict,  outfile:str ) -> None:
         """
         Write CSV with data.
         ------------------------------------
@@ -90,36 +90,36 @@ class JsonParser:
             :param outdir:   Folder where store CSV with results
         """
 
-        # Final csv file
-        outfile = Path(outdir) / ( 'gender_analysis' + '.csv')
+        # # Final csv file
+        # outfile = Path(outdir) / ( 'gender_analysis' + '.csv')
 
-        # Check information in csv
-        if not JsonParser.is_json_entry_in_csv(outfile, entry):
+        # # Check information in csv
+        # if not JsonParser.is_json_entry_in_csv(outfile, entry):
 
             # Create and save information in csv
-            with open(str(outfile), 'a', newline='', encoding='utf-8') as csvfile:
-                fieldnames = [
-                    JsonParser.PMCID,
-                    JsonParser.FIRST_AUTHOR,
-                    JsonParser.LAST_AUTHOR,
-                    JsonParser.STATUS,
-                    JsonParser.FIRST_AUTHOR_GENDER,
-                    JsonParser.FIRST_AUTHOR_GENDER_PROBABILITY,
-                    JsonParser.FIRST_NAME_GENDER_STATUS,
-                    JsonParser.FIRST_AUTHOR_NATION,
-                    JsonParser.FIRST_AUTHOR_NATION_PROBABILITY,
-                    JsonParser.FIRST_AUTHOR_NATION_STATUS,
-                    JsonParser.LAST_AUTHOR_GENDER,
-                    JsonParser.LAST_AUTHOR_GENDER_PROBABILITY,
-                    JsonParser.LAST_AUTHOR_GENDER_STATUS,
-                    JsonParser.LAST_AUTHOR_NATION,
-                    JsonParser.LAST_AUTHOR_NATION_PROBABILITY,
-                    JsonParser.LAST_AUTHOR_NATION_STATUS
-                ]
-                writer = csv.DictWriter(
-                    csvfile, fieldnames=fieldnames, delimiter=',')
-                if  outfile.stat().st_size == 0 :
-                    writer.writeheader()
-                writer.writerow(entry)
+        with open(str(outfile), 'a', newline='', encoding='utf-8') as csvfile:
+            fieldnames = [
+                JsonParser.PMCID,
+                JsonParser.FIRST_AUTHOR,
+                JsonParser.LAST_AUTHOR,
+                JsonParser.STATUS,
+                JsonParser.FIRST_AUTHOR_GENDER,
+                JsonParser.FIRST_AUTHOR_GENDER_PROBABILITY,
+                JsonParser.FIRST_NAME_GENDER_STATUS,
+                JsonParser.FIRST_AUTHOR_NATION,
+                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY,
+                JsonParser.FIRST_AUTHOR_NATION_STATUS,
+                JsonParser.LAST_AUTHOR_GENDER,
+                JsonParser.LAST_AUTHOR_GENDER_PROBABILITY,
+                JsonParser.LAST_AUTHOR_GENDER_STATUS,
+                JsonParser.LAST_AUTHOR_NATION,
+                JsonParser.LAST_AUTHOR_NATION_PROBABILITY,
+                JsonParser.LAST_AUTHOR_NATION_STATUS
+            ]
+            writer = csv.DictWriter(
+                csvfile, fieldnames=fieldnames, delimiter=',')
+            if  outfile.stat().st_size == 0 :
+                writer.writeheader()
+            writer.writerow(entry)
 
 
