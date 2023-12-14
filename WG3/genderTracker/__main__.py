@@ -3,11 +3,11 @@
 
 import argparse
 import sys
-import time
 import typing 
 from pathlib import Path
 # from .proxy import Proxy
 from .json_parser import JsonParser
+from collections import OrderedDict
 from .demografix import GenderPredictor
 
 NUM_ATTEMPTS = 20
@@ -22,8 +22,7 @@ def run ( json_path: str, outfile: str, verbose: bool) -> None:
 
     # perdict gender fullnames
     for pmcid, authors in data_authors.items():
-        attempt = 0
-        
+
         # check if entry is already saved
         if JsonParser.is_pmcid_in_csv( outfile, pmcid ):
             continue
@@ -33,76 +32,61 @@ def run ( json_path: str, outfile: str, verbose: bool) -> None:
             print(f"Gender inference for: {pmcid}", end='', flush=True)
 
         if authors.get('status') == "PASS":
-            try:
-
-                ## FIRST AUTHOR
-        
-                # fist_author: infering  name nation 
-                fauthor_nation = GenderPredictor.get_nation(authors.get('first_author'))
+            # try: 
+            ## FIRST AUTHOR
+    
+            # fist_author: infering  name nation 
+            fauthor_nation, fselected_category = GenderPredictor.get_nation(authors.get('first_author'))
             
-                # fist_author: infering gender name
-                fauthor_gender = GenderPredictor.get_gender(authors.get('first_author'), fauthor_nation)
-            
+            # fist_author: infering gender name
+            fauthor_gender = GenderPredictor.get_gender(authors.get('first_author'), fauthor_nation, fselected_category)
                 
-                # LAST AUTHOR
+            # LAST AUTHOR
 
-                # last_author: infering name nation 
-                lauthor_nation = GenderPredictor.get_nation(authors.get('last_author'))
+            # last_author: infering name nation 
+            lauthor_nation, lselected_category = GenderPredictor.get_nation(authors.get('last_author'))
 
-                # last_author: infering gender name
-                lauthor_gender = GenderPredictor.get_gender(authors.get('last_author'), lauthor_nation)
+            # last_author: infering gender name
+            lauthor_gender = GenderPredictor.get_gender(authors.get('last_author'), lauthor_nation, lselected_category)
 
-
-            except Exception as e:
-                print('\n{}'.format(e))
-                print(
-                    '[ Query Error ] There was a problem infering gender/nation for {pmcid}. Attempt {}/{}'.format(attempt + 1, NUM_ATTEMPTS))
-                attempt = attempt + 1
-
-                while True:
-                    # Stop the run to change the proxy
-                    inp = input('An unexpected problem has occurred or you have reached the limit of requests specified by the library.' 
-                            'Please, continue the execution and if the error persists, use a vpn to change the IP or open a pull request to fix the problem if this persist.'
-                            'Press Enter to continue the analysis or type "exit" to stop and exit....')
-                    if inp.strip().lower() == "exit":
-                        sys.exit()
-
-                    elif not inp.strip():
-                        print("Wait 10 seconds...")
-                        time.sleep(10)
-                        break  # Break the inner while loop and continue with the next attempt
-                    else:
-                        print("Invalid input. Please press Enter or type 'exit'.")
-            
-                if attempt == NUM_ATTEMPTS:
-                    sys.exit("Disconnected!")
-            #         # If connection fails because of the proxy, try to find and connect a new one
-            #         print(' '.join("[ Connection Error ]: Connecting to a new proxy. This process can takes times. \
-            #                                         Retrying in 15 seconds once we find a new proxy.".split()))
-            #         Proxy.set_new_proxy()
-            #     else:
-            #         break
-            # else:, end='', flush=True
-            #     raise ConnectionError('[ Critical Error ] Too many failed attempts at scraping Google Scholar. Please run the program again.')
 
             # define entry
             entry = {
+                # CORE_DATA
                 JsonParser.PMCID:pmcid,
                 JsonParser.FIRST_AUTHOR: authors.get('first_author'),
                 JsonParser.LAST_AUTHOR: authors.get('last_author'),
-                JsonParser.STATUS: authors.get('status'),
+                JsonParser.ASSOCIATED_AUTHORS: authors.get('status'),
+
+                # FIRST_AUTHOR_NATION
+                ## name
+                JsonParser.FIRST_AUTHOR_NATION_NAME: fauthor_nation.get(authors.get('first_author')).get(fselected_category).get('country_id'),
+                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY_NAME: fauthor_nation.get(authors.get('first_author')).get(fselected_category).get('country_score'),
+                JsonParser.FIRST_AUTHOR_NATION_STATUS_NAME:fauthor_nation.get(authors.get('first_author')).get(fselected_category).get('country_status'),
+                ## surname
+                JsonParser.FIRST_AUTHOR_NATION_SURNAME: fauthor_nation.get(authors.get('first_author')).get(fselected_category).get('country_id'),
+                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY_SURNAME: fauthor_nation.get(authors.get('first_author')).get(fselected_category).get('country_score'),
+                JsonParser.FIRST_AUTHOR_NATION_STATUS_SURNAME:fauthor_nation.get(authors.get('first_author')).get(fselected_category).get('country_status'),
+                # FIRST_AUTHOR_GENDER
                 JsonParser.FIRST_AUTHOR_GENDER: fauthor_gender.get(authors.get('first_author')).get('name').get('gender'),
                 JsonParser.FIRST_AUTHOR_GENDER_PROBABILITY: fauthor_gender.get(authors.get('first_author')).get('name').get('gender_score'),
                 JsonParser.FIRST_NAME_GENDER_STATUS: fauthor_gender.get(authors.get('first_author')).get('name').get('gender_status'),
-                JsonParser.FIRST_AUTHOR_NATION: fauthor_nation.get(authors.get('first_author')).get('surname').get('country_id'),
-                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY: fauthor_nation.get(authors.get('first_author')).get('surname').get('country_score'),
-                JsonParser.FIRST_AUTHOR_NATION_STATUS:fauthor_nation.get(authors.get('first_author')).get('surname').get('country_status'),
+                JsonParser.FIRST_AUTHOR_SELECTED_NATION_CATEGORY: fselected_category,
+                
+                # LAST_AUTHOR_NATION
+                ## name
+                JsonParser.LAST_AUTHOR_NATION_NAME: lauthor_nation.get(authors.get('last_author')).get(lselected_category).get('country_id'),
+                JsonParser.LAST_AUTHOR_NATION_PROBABILITY_NAME: lauthor_nation.get(authors.get('last_author')).get(lselected_category).get('country_score'),
+                JsonParser.LAST_AUTHOR_NATION_STATUS_NAME: lauthor_nation.get(authors.get('last_author')).get(lselected_category).get('country_status'),
+                ## surname
+                JsonParser.LAST_AUTHOR_NATION_SURNAME: lauthor_nation.get(authors.get('last_author')).get(lselected_category).get('country_id'),
+                JsonParser.LAST_AUTHOR_NATION_PROBABILITY_SURNAME: lauthor_nation.get(authors.get('last_author')).get(lselected_category).get('country_score'),
+                JsonParser.LAST_AUTHOR_NATION_STATUS_SURNAME: lauthor_nation.get(authors.get('last_author')).get(lselected_category).get('country_status'),
+                # LAST_AUTHOR_GENDER
                 JsonParser.LAST_AUTHOR_GENDER: lauthor_gender.get(authors.get('last_author')).get('name').get('gender'),
                 JsonParser.LAST_AUTHOR_GENDER_PROBABILITY: lauthor_gender.get(authors.get('last_author')).get('name').get('gender_score'),
                 JsonParser.LAST_AUTHOR_GENDER_STATUS: lauthor_gender.get(authors.get('last_author')).get('name').get('gender_status'),
-                JsonParser.LAST_AUTHOR_NATION: lauthor_nation.get(authors.get('last_author')).get('surname').get('country_id'),
-                JsonParser.LAST_AUTHOR_NATION_PROBABILITY: lauthor_nation.get(authors.get('last_author')).get('surname').get('country_score'),
-                JsonParser.LAST_AUTHOR_NATION_STATUS: lauthor_nation.get(authors.get('last_author')).get('surname').get('country_status')
+                JsonParser.LAST_AUTHOR_SELECTED_NATION_CATEGORY: lselected_category
             }
 
             if (verbose):
@@ -112,22 +96,41 @@ def run ( json_path: str, outfile: str, verbose: bool) -> None:
 
         else:
             entry = {
+                # CORE_DATA
                 JsonParser.PMCID:pmcid,
                 JsonParser.FIRST_AUTHOR: authors.get('first_author'),
                 JsonParser.LAST_AUTHOR: authors.get('last_author'),
-                JsonParser.STATUS: authors.get('status'),
+                JsonParser.ASSOCIATED_AUTHORS: authors.get('status'),
+
+                # FIRST_AUTHOR_NATION
+                ## name
+                JsonParser.FIRST_AUTHOR_NATION_NAME: "",
+                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY_NAME: 0.0,
+                JsonParser.FIRST_AUTHOR_NATION_STATUS_NAME: "MISSING",
+                ## surname 
+                JsonParser.FIRST_AUTHOR_NATION_SURNAME: "",
+                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY_SURNAME: 0.0,
+                JsonParser.FIRST_AUTHOR_NATION_STATUS_SURNAME: "MISSING",
+                # FIRST_AUTHOR_GENDER
                 JsonParser.FIRST_AUTHOR_GENDER: "",
                 JsonParser.FIRST_AUTHOR_GENDER_PROBABILITY: 0.0,
                 JsonParser.FIRST_NAME_GENDER_STATUS: "MISSING",
-                JsonParser.FIRST_AUTHOR_NATION: "",
-                JsonParser.FIRST_AUTHOR_NATION_PROBABILITY: 0.0,
-                JsonParser.FIRST_AUTHOR_NATION_STATUS: "MISSING",
+                JsonParser.FIRST_AUTHOR_SELECTED_NATION_CATEGORY: "",
+
+                # LAST_AUTHOR_NATION
+                ## name
+                JsonParser.LAST_AUTHOR_NATION_NAME: "",
+                JsonParser.LAST_AUTHOR_NATION_PROBABILITY_NAME: 0.0,
+                JsonParser.LAST_AUTHOR_NATION_STATUS_NAME: "MISSING",
+                ## surname
+                JsonParser.LAST_AUTHOR_NATION_SURNAME: "",
+                JsonParser.LAST_AUTHOR_NATION_PROBABILITY_SURNAME: 0.0,
+                JsonParser.LAST_AUTHOR_NATION_STATUS_SURNAME: "MISSING",
+                # LAST_AUTHOR_GENDER
                 JsonParser.LAST_AUTHOR_GENDER: "",
                 JsonParser.LAST_AUTHOR_GENDER_PROBABILITY: 0.0,
                 JsonParser.LAST_AUTHOR_GENDER_STATUS: "MISSING",
-                JsonParser.LAST_AUTHOR_NATION: "",
-                JsonParser.LAST_AUTHOR_NATION_PROBABILITY: 0.0,
-                JsonParser.LAST_AUTHOR_NATION_STATUS: "MISSING"
+                JsonParser.LAST_AUTHOR_SELECTED_NATION_CATEGORY: ""
             }
 
             if (verbose):
@@ -174,7 +177,7 @@ def main():
         outdir = Path(args.outdir)
         outdir.mkdir(parents=True,exist_ok=True)
         # Final csv file
-        outfile = Path(outdir) / ( 'gender_analysis1' + '.csv')
+        outfile = Path(outdir) / ( 'gender_analysis' + '.csv')
 
     if args.verbose:
         print("genderTraker")
