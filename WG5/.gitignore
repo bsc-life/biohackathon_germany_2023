@@ -140,4 +140,5 @@ data/input/
 data/processing/*
 !data/processing/merge_df2.csv
 !data/processing/projects.csv
-data/output/
+data/output/*
+!data/output/nih_results-1000.csv
