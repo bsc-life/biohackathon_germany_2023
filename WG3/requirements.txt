@@ -1,0 +1,7 @@
+lxml
+pandas
+seaborn
+py-agify
+matplotlib
+impact-factor
+multiprocessing
